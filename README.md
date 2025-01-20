@@ -12,9 +12,6 @@ A simple C++ application for tracking personal expenses with features like user 
   - Add, edit, and view expenses.
   - Categorize expenses by type (e.g., Food, Transport, Utilities).
   
-- *Income Tracking:* (Optional enhancement)
-  - Track multiple sources of income.
-
 - *File Handling:*
   - Persistent storage of user data and expenses in text files.
   - Load and save data automatically.
@@ -24,16 +21,3 @@ A simple C++ application for tracking personal expenses with features like user 
 
 - *Exception Handling:*
   - Robust error handling for invalid inputs and file operations.
-
-## Getting Started
-
-### Prerequisites
-
-- A C++ compiler (e.g., GCC, Clang)
-- Basic knowledge of C++ and file handling
-
-### Installation
-
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/yourusername/expense-tracking-system.git
