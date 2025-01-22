@@ -20,6 +20,35 @@ void registerUser() {
 	cout << "User registered successfully."S << endl;
 }
 
+void loadUsers() {
+    ifstream file("users.txt");
+    string line;
+    while (getline(file, line)) {
+        vector<string> userData = split(line, ',');
+        if (userData.size() == 2) {
+            users.push_back({userData[0], userData[1]});
+        }
+    }
+    file.close();
+}
+
+// Save users to file
+void saveUsers() {
+    ofstream file("users.txt");
+    for (const auto &user : users) {
+        file << user.username << "," << user.password << endl;
+    }
+    file.close();
+}
+
+
+struct Expense {
+    string category;
+    string description;
+    double amount;
+    string date;
+};
+
 int main(){
 	int choice;
 	do {
