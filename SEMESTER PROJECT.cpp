@@ -40,6 +40,24 @@ void saveUsers() {
     }
     file.close();
 }
+void addExpense() {
+    Expense newExpense;
+    cout << "Enter category: ";
+    cin.ignore();
+    getline(cin, newExpense.category);
+    cout << "Enter description: ";
+    getline(cin, newExpense.description);
+    cout << "Enter amount: ";
+    cin >> newExpense.amount;
+    cout << "Enter date (YYYY-MM-DD): ";
+    cin >> newExpense.date;
+
+    expenses.push_back(newExpense);
+    saveExpenses();
+
+    cout << "Expense added successfully!" << endl;
+}
+
 
 
 struct Expense {
