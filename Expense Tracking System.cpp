@@ -4,7 +4,6 @@
 #include <vector>
 #include <iomanip>
 #include <stdexcept>
-
 using namespace std;
 
 // Storing user's dataa
