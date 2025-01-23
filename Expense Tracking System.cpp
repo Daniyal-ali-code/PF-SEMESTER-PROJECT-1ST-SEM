@@ -90,16 +90,6 @@ void loadExpenses() {
     }
     file.close();
 }
-
-<<<<<<< HEAD
-int localCode() {
-    return 1;
-}
-
-int remoteCode() {
-    return 2;
-}
-
 void viewExpenses() {
     if (expenses.empty()) {
         cout << "No expenses found." << endl;
@@ -116,9 +106,6 @@ void viewExpenses() {
              << setw(15) << expense.date << endl;
     }
 }
-
-=======
->>>>>>> 9a658012cd6f40b43a5b5708bda4679eefdcebae
 // Saving users in text file
 void saveUsers() {
     ofstream file("users.txt");
