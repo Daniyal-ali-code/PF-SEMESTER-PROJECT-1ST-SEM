@@ -4,6 +4,9 @@
 #include <vector>
 #include <iomanip>
 #include <stdexcept>
+#include <limits>
+#include <sstream>
+
 using namespace std;
 
 // Storing user's dataa
@@ -20,6 +23,23 @@ struct Expense {
     string date;
 };
 
+// Function prototypes
+void registerUser();
+bool loginUser();
+void displayMenu();
+void addExpense();
+void viewExpenses();
+void exportData();
+void loadUsers();
+void saveUsers();
+void loadExpenses();
+void saveExpenses();
+void handleInvalidInput();
+
+vector<User> users;
+vector<Expense> expenses;
+string currentUser;
+
 // Registering users	
 void registerUser() {
 	User newUser;
@@ -28,7 +48,7 @@ void registerUser() {
 	cout << "Enter password: ";
 	cin >>  newUser.password;
 
-	users.push_back(newUser);
+	string users.push_back(newUser);
 	saveUsers();
 
 	cout << "User registered successfully."S << endl;
