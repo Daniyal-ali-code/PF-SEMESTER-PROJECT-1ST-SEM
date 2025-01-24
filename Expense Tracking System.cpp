@@ -66,6 +66,32 @@ void loadUsers() {
     }
     file.close();
 }
+// Saving users in text file
+void saveUsers() {
+    ofstream file("users.txt");
+    for (const auto &user : users) {
+        file << user.username << "," << user.password << endl;
+    }
+    file.close();
+}
+// User login
+bool loginUser() {
+    string username, password;
+    cout << "Enter username: ";
+    cin >> username;
+    cout << "Enter password: ";
+    cin >> password;
+
+    for (const auto &user : users) {
+        if (user.username == username && user.password == password) {
+            currentUser = username;
+            cout << "Login successful!" << endl;
+            return true;
+        }
+    }
+    cout << "Invalid username or password." << endl;
+    return false;
+}
 // Loading expenses from the text fiek
 
 void loadExpenses() {
@@ -105,14 +131,6 @@ void viewExpenses() {
              << setw(10) << fixed << setprecision(2) << expense.amount
              << setw(15) << expense.date << endl;
     }
-}
-// Saving users in text file
-void saveUsers() {
-    ofstream file("users.txt");
-    for (const auto &user : users) {
-        file << user.username << "," << user.password << endl;
-    }
-    file.close();
 }
 
 
