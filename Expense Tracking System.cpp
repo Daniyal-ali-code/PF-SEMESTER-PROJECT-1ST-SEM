@@ -2,12 +2,14 @@
 #include <fstream>  // we use this library for file handling
 #include <string>
 #include <limits>   // we use this library for numeric_limits function
+#include <iomanip>  // For formatting output
 using namespace std;
 
 void StartingMenu();
 void RegisterUser();
 void LoginMenu();
 void AddExpense(const string& username);
+void ViewExpenses(const string& username);
 void HandleInvalidInput(int maxChoice);
 
 void StartingMenu() {
@@ -165,6 +167,39 @@ void AddExpense(const string& username) {
     }
 }
 
+void ViewExpenses(const string& username) {
+    string filename = username + "_expenses.txt";
+    ifstream inFile(filename);
+
+    cout << "\n--- VIEW EXPENSES ---\n";
+
+    if (inFile.is_open()) {
+        string line;
+        bool hasExpenses = false;
+
+        cout << left << setw(30) << "DESCRIPTION" << right << setw(10) << "AMOUNT (PKR)" << endl;
+        cout << string(40, '-') << endl;
+
+        while (getline(inFile, line)) {
+            size_t delimiterPos = line.find(':');
+            if (delimiterPos != string::npos) {
+                string description = line.substr(0, delimiterPos);
+                double amount = stod(line.substr(delimiterPos + 1));
+                hasExpenses = true;
+
+                cout << left << setw(30) << description << right << setw(10) << fixed << setprecision(2) << amount << endl;
+            }
+        }
+
+        inFile.close();
+
+        if (!hasExpenses) {
+            cout << "\nNO EXPENSES FOUND FOR THIS USER.\n";
+        }
+    } else {
+        cout << "\nERROR: COULD NOT OPEN EXPENSES FILE OR NO EXPENSES FOUND.\n";
+    }
+}
 void HandleInvalidInput(int maxChoice) {
     cin.clear();
     cin.ignore(numeric_limits<streamsize>::max(), '\n');
