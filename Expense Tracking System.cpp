@@ -10,6 +10,8 @@ void RegisterUser();
 void LoginMenu();
 void AddExpense(const string& username);
 void ViewExpenses(const string& username);
+void DeleteExpense(const string& username);
+void TotalExpenses(const string& username);
 void HandleInvalidInput(int maxChoice);
 
 void StartingMenu() {
@@ -200,6 +202,73 @@ void ViewExpenses(const string& username) {
         cout << "\nERROR: COULD NOT OPEN EXPENSES FILE OR NO EXPENSES FOUND.\n";
     }
 }
+void DeleteExpense(const string& username) {
+    string filename = username + "_expenses.txt";
+    ifstream inFile(filename);
+    ofstream tempFile("temp.txt");
+
+    cout << "\n--- DELETE EXPENSE ---\n";
+    if (inFile.is_open() && tempFile.is_open()) {
+        string line;
+        string descriptionToDelete;
+        cout << "ENTER EXPENSE DESCRIPTION TO DELETE: ";
+        cin.ignore();
+        getline(cin, descriptionToDelete);
+
+        bool found = false;
+        while (getline(inFile, line)) {
+            size_t delimiterPos = line.find(':');
+            if (delimiterPos != string::npos) {
+                string description = line.substr(0, delimiterPos);
+                if (description == descriptionToDelete) {
+                    found = true;
+                    cout << "DELETING EXPENSE: " << line << endl;
+                    continue; // Skip writing this line to the temp file
+                }
+            }
+            tempFile << line << endl; // Write the line to the temp file
+        }
+
+        inFile.close();
+        tempFile.close();
+
+        // Replace the original file with the temp file
+        remove(filename.c_str());
+        rename("temp.txt", filename.c_str());
+
+        if (found) {
+            cout << "\nEXPENSE DELETED SUCCESSFULLY!\n";
+        } else {
+            cout << "\nNO EXPENSE FOUND WITH DESCRIPTION: " << descriptionToDelete << endl;
+        }
+    } else {
+        cout << "\nERROR: COULD NOT OPEN EXPENSES FILE.\n";
+    }
+}
+
+void TotalExpenses(const string& username) {
+    string filename = username + "_expenses.txt";
+    ifstream inFile(filename);
+    double total = 0.0;
+
+    cout << "\n--- TOTAL EXPENSES ---\n";
+
+    if (inFile.is_open()) {
+        string line;
+        while (getline(inFile, line)) {
+            size_t delimiterPos = line.find(':');
+            if (delimiterPos != string::npos) {
+                double amount = stod(line.substr(delimiterPos + 1));
+                total += amount; // Accumulate the total amount
+            }
+        }
+        inFile.close();
+        cout << "TOTAL EXPENSES: PKR " << fixed << setprecision(2) << total << endl;
+    } else {
+        cout << "\nERROR: COULD NOT OPEN EXPENSES FILE.\n";
+    }
+}
+
 void HandleInvalidInput(int maxChoice) {
     cin.clear();
     cin.ignore(numeric_limits<streamsize>::max(), '\n');
