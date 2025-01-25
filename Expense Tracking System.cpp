@@ -128,7 +128,7 @@ void LoginMenu() {
                 }
             } while (true);
         } else {
-            cout << "\nERROR: INVALID CREDENTIALS." << endl;
+            cout << "\nERROR: INCORRECT PASSWORD." << endl;
         }
     } else {
         cout << "\nERROR: USER DOES NOT EXIST. PLEASE REGISTER FIRST." << endl;
