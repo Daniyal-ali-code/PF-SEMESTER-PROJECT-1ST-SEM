@@ -260,7 +260,7 @@ void TotalExpenses(const string& username) {
             size_t delimiterPos = line.find(':');
             if (delimiterPos != string::npos) {
                 double amount = stod(line.substr(delimiterPos + 1));
-                total += amount; // Accumulate the total amount
+                total += amount;
             }
         }
         inFile.close();
