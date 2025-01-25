@@ -1,1 +1,2 @@
-Shoes : $3000
+Shoes:3000
+Book:500
