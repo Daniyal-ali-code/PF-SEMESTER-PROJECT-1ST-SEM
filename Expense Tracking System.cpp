@@ -1,7 +1,7 @@
 #include <iostream>
-#include <fstream>  // For file handling
+#include <fstream>  // we use this library for file handling
 #include <string>
-#include <limits>   // For std::numeric_limits
+#include <limits>   // we use this library for numeric_limits function
 using namespace std;
 
 void StartingMenu();
@@ -10,7 +10,7 @@ void LoginMenu();
 void HandleInvalidInput(int maxChoice);
 
 void StartingMenu() {
-    int choice;  // Declare 'choice' locally
+    int choice;
     do {
         cout << "\nWELCOME TO EXPENSE TRACKING SYSTEM..." << endl;
         cout << "PRESS 1 : REGISTER" << endl;
@@ -18,7 +18,7 @@ void StartingMenu() {
         cout << "PRESS 3 : EXIT" << endl;
         cout << "ENTER YOUR CHOICE: ";
 
-        // Check if input is an integer
+        // Checking if  the provided input is an integer
         if (!(cin >> choice)) {
             HandleInvalidInput(3);
         } else if (choice < 1 || choice > 3) {
@@ -46,19 +46,17 @@ void RegisterUser() {
     string name, password, filename;
     cout << "\n--- REGISTER NEW USER ---" << endl;
 
-    // Get user name
-    cin.ignore(); // Clear input buffer
+    cin.ignore(); // This function clears the input history
     cout << "ENTER YOUR NAME: ";
     getline(cin, name);
 
-    // Get user password
     cout << "ENTER YOUR PASSWORD: ";
     getline(cin, password);
 
-    // File name based on user's name
+	// The file that will be created will be named after the username
     filename = name + ".txt";
 
-    // Check if the file already exists
+    // Checking if the file already exists
     ifstream checkFile(filename);
     if (checkFile.is_open()) {
         cout << "\nERROR: USER ALREADY EXISTS. PLEASE LOGIN OR USE A DIFFERENT NAME." << endl;
@@ -67,7 +65,7 @@ void RegisterUser() {
         return;
     }
 
-    // Write user data to file
+    // Saving user's data into file
     ofstream userFile(filename);
     if (userFile.is_open()) {
         userFile << "Name: " << name << endl;
@@ -79,10 +77,39 @@ void RegisterUser() {
     }
 }
 
+void LoginMenu() {
+    int choice;
+    do {
+        cout << "\nPRESS 1 : ADD EXPENSE" << endl;
+        cout << "PRESS 2 : VIEW EXPENSE" << endl;
+        cout << "PRESS 3 : EXPORT DATA" << endl;
+        cout << "PRESS 4 : LOGOUT" << endl;
+        cout << "ENTER YOUR CHOICE: ";
+
+        if (!(cin >> choice)) {
+            HandleInvalidInput(4);
+        } else if (choice < 1 || choice > 4) {
+            cout << "\nINVALID INPUT. PLEASE ENTER A CHOICE BETWEEN 1-4." << endl;
+        } else {
+            switch (choice) {
+                case 1:
+                    break;
+                case 2:
+                    break;
+                case 3:
+                    break;
+                case 4:
+                    cout << "\nLOGGING OUT..." << endl;
+                    return;
+            }
+        }
+    } while (true);
+}
+
 
 void HandleInvalidInput(int maxChoice) {
     cin.clear();
-    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');	// This will ignore maximum invalid characters till new line is reached 
     cout << "\nINVALID INPUT. PLEASE ENTER A CHOICE BETWEEN 1-" << maxChoice << "." << endl;
 }
 
