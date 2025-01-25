@@ -7,11 +7,12 @@
 using namespace std;
 
 void StartingMenu();
-void RegisterUser ();
+void RegisterUser();
 void LoginMenu();
 void AddExpense(const string& username);
 void ViewExpenses(const string& username);
 void DeleteExpense(const string& username);
+void TotalExpenses(const string& username);
 void HandleInvalidInput(int maxChoice);
 
 void StartingMenu() {
@@ -20,30 +21,37 @@ void StartingMenu() {
         cout << "\nWELCOME TO EXPENSE TRACKING SYSTEM..." << endl;
         cout << "PRESS 1 : REGISTER" << endl;
         cout << "PRESS 2 : LOGIN" << endl;
-        cout << "PRESS 3 : EXIT" << endl;
+        cout << "PRESS 3 : HELPLINE" << endl;
+        cout << "PRESS 4 : EXIT" << endl;
         cout << "ENTER YOUR CHOICE: ";
 
-        if (!(cin >> choice)) {
-            HandleInvalidInput(3);
-        } else if (choice < 1 || choice > 3) {
-            cout << "\nINVALID INPUT. PLEASE ENTER A CHOICE BETWEEN 1-3." << endl;
-        } else {
-            switch (choice) {
-                case 1:
-                    RegisterUser ();
-                    break;
-                case 2:
-                    LoginMenu();
-                    break;
-                case 3:
-                    cout << "\nEXITING THE PROGRAM..." << endl;
-                    break;
-            }
+        while (!(cin >> choice) || choice < 1 || choice > 4) {
+            HandleInvalidInput(4);
         }
-    } while (choice != 3);
+
+        switch (choice) {
+            case 1:
+                RegisterUser();
+                break;
+            case 2:
+                LoginMenu();
+                break;
+            case 3:
+                cout << "\nIF YOU ARE FACING ANY ISSUE WITH THE EXPENSE TRACKING SYSTEM," << endl;
+                cout << "OR IF ANY ASSISTANCE IS REQUIRED, PLEASE CONTACT ANY OF THE CREATORS:" << endl;
+                cout << "\nMR. DANIYAL ALI		 	+92 333 0276929 " << endl;
+                cout << "MS. AYESHA ZAFAR		+92 344 3822791 " << endl;
+                cout << "MR. SYED ABDUL MUIZ	 	+92 341 2287624 " << endl;
+                cout << "\nTHANK YOU!" << endl;
+                break;
+            case 4:
+                cout << "\nEXITING THE PROGRAM..." << endl;
+                break;
+        }
+    } while (choice != 4);
 }
 
-void RegisterUser () {
+void RegisterUser() {
     string name, password, filename;
     cout << "\n--- REGISTER NEW USER ---" << endl;
 
@@ -76,6 +84,7 @@ void RegisterUser () {
 
 void LoginMenu() {
     string username, password, filename;
+    int choice;
     cout << "\n--- LOGIN ---" << endl;
 
     cin.ignore();
@@ -95,7 +104,6 @@ void LoginMenu() {
 
         if (storedName == "Name: " + username && storedPassword == "Password: " + password) {
             cout << "\nLOGIN SUCCESSFUL! WELCOME, " << username << "!\n";
-            int choice;
             do {
                 cout << "\nPRESS 1 : ADD EXPENSE" << endl;
                 cout << "PRESS 2 : VIEW EXPENSES" << endl;
@@ -104,27 +112,26 @@ void LoginMenu() {
                 cout << "PRESS 5 : LOGOUT" << endl;
                 cout << "ENTER YOUR CHOICE: ";
 
-                if (!(cin >> choice)) {
+                while (!(cin >> choice) || choice < 1 || choice > 5) {
                     HandleInvalidInput(5);
-                } else if (choice < 1 || choice > 5) {
-                    cout << "\nINVALID INPUT. PLEASE ENTER A CHOICE BETWEEN 1-5." << endl;
-                } else {
-                    switch (choice) {
-                        case 1:
-                            AddExpense(username);
-                            break;
-                        case 2:
-                            ViewExpenses(username);
-                            break;
-                        case 3:
-                            DeleteExpense(username);
-                            break;
-                        case 4:
-                            break;
-                        case 5:
-                            cout << "\nLOGGING OUT..." << endl;
-                            return;
-                    }
+                }
+
+                switch (choice) {
+                    case 1:
+                        AddExpense(username);
+                        break;
+                    case 2:
+                        ViewExpenses(username);
+                        break;
+                    case 3:
+                        DeleteExpense(username);
+                        break;
+                    case 4:
+                        TotalExpenses(username);
+                        break;
+                    case 5:
+                        cout << "\nLOGGING OUT..." << endl;
+                        return;
                 }
             } while (true);
         } else {
@@ -147,11 +154,9 @@ void AddExpense(const string& username) {
     getline(cin, description);
 
     cout << "ENTER AMOUNT: ";
-    cin >> amount;
-
-    if (cin.fail() || amount <= 0) {
+    while (!(cin >> amount) || amount <= 0) {
         HandleInvalidInput(1);
-        return;
+        cout << "ENTER AMOUNT: ";
     }
 
     ofstream outFile(filename, ios::app);
@@ -237,6 +242,29 @@ void DeleteExpense(const string& username) {
         } else {
             cout << "\nNO EXPENSE FOUND WITH DESCRIPTION: " << descriptionToDelete << endl;
         }
+    } else {
+        cout << "\nERROR: COULD NOT OPEN EXPENSES FILE.\n";
+    }
+}
+
+void TotalExpenses(const string& username) {
+    string filename = username + "_expenses.txt";
+    ifstream inFile(filename);
+    double total = 0.0;
+
+    cout << "\n--- TOTAL EXPENSES ---\n";
+
+    if (inFile.is_open()) {
+        string line;
+        while (getline(inFile, line)) {
+            size_t delimiterPos = line.find(':');
+            if (delimiterPos != string::npos) {
+                double amount = stod(line.substr(delimiterPos + 1));
+                total += amount; // Accumulate the total amount
+            }
+        }
+        inFile.close();
+        cout << "TOTAL EXPENSES: PKR " << fixed << setprecision(2) << total << endl;
     } else {
         cout << "\nERROR: COULD NOT OPEN EXPENSES FILE.\n";
     }
