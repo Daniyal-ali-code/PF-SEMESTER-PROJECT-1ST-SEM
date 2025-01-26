@@ -1,7 +1,3 @@
-Here’s the redesigned version of your **Expense Tracking System** README file, structured and formatted for maximum clarity and a professional presentation:
-
----
-
 # 💸 **Expense Tracking System**
 
 The **Expense Tracking System** is a console-based application built to simplify personal expense management. With features like secure registration, user-specific expense tracking, and an intuitive interface, this application is your go-to tool for managing day-to-day spending. 
