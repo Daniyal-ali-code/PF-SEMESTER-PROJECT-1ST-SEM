@@ -1,8 +1,8 @@
 #include <iostream>
-#include <fstream>  // For file handling
+#include <fstream>   // For file handling
 #include <string>
-#include <limits>   // For numeric_limits
-#include <iomanip>  // For formatting output
+#include <limits>    // For numeric_limits
+#include <iomanip>   // For formatting output
 
 using namespace std;
 
@@ -18,11 +18,11 @@ void HandleInvalidInput(int maxChoice);
 void StartingMenu() {
     int choice;
     do {
-        cout << "\nWELCOME TO EXPENSE TRACKING SYSTEM..." << endl;
-        cout << "PRESS 1 : REGISTER" << endl;
-        cout << "PRESS 2 : LOGIN" << endl;
-        cout << "PRESS 3 : HELPLINE" << endl;
-        cout << "PRESS 4 : EXIT" << endl;
+        cout << "\nWELCOME TO EXPENSE TRACKING SYSTEM...\n";
+        cout << "PRESS 1 : REGISTER\n";
+        cout << "PRESS 2 : LOGIN\n";
+        cout << "PRESS 3 : HELPLINE\n";
+        cout << "PRESS 4 : EXIT\n";
         cout << "ENTER YOUR CHOICE: ";
 
         while (!(cin >> choice) || choice < 1 || choice > 4) {
@@ -37,15 +37,13 @@ void StartingMenu() {
                 LoginMenu();
                 break;
             case 3:
-                cout << "\nIF YOU ARE FACING ANY ISSUE WITH THE EXPENSE TRACKING SYSTEM," << endl;
-                cout << "OR IF ANY ASSISTANCE IS REQUIRED, PLEASE CONTACT ANY OF THE CREATORS:" << endl;
-                cout << "\nMR. DANIYAL ALI		 	+92 333 0276929 " << endl;
-                cout << "MS. AYESHA ZAFAR		+92 344 3822791 " << endl;
-                cout << "MR. SYED ABDUL MUIZ	 	+92 341 2287624 " << endl;
-                cout << "\nTHANK YOU!" << endl;
+                cout << "\nFOR ANY QUERIES, PLEASE CONTACT:\n";
+                cout << left << setw(25) << "MR. DANIYAL ALI" << right << setw(15) << "+92 333 0276929\n";
+                cout << left << setw(25) << "MS. AYESHA ZAFAR" << right << setw(15) << "+92 344 3822791\n";
+                cout << left << setw(25) << "MR. SYED ABDUL MUIZ" << right << setw(15) << "+92 341 2287624\n";
                 break;
             case 4:
-                cout << "\nEXITING THE PROGRAM..." << endl;
+                cout << "\nEXITING THE PROGRAM...\n";
                 break;
         }
     } while (choice != 4);
@@ -53,7 +51,7 @@ void StartingMenu() {
 
 void RegisterUser() {
     string name, password, filename;
-    cout << "\n--- REGISTER NEW USER ---" << endl;
+    cout << "\n--- REGISTER NEW USER ---\n";
 
     cin.ignore();
     cout << "ENTER YOUR NAME: ";
@@ -66,7 +64,7 @@ void RegisterUser() {
 
     ifstream checkFile(filename);
     if (checkFile.is_open()) {
-        cout << "\nERROR: USER ALREADY EXISTS. PLEASE LOGIN OR USE A DIFFERENT NAME." << endl;
+        cout << "\nERROR: USER ALREADY EXISTS. PLEASE LOGIN OR USE A DIFFERENT NAME.\n";
         checkFile.close();
         return;
     }
@@ -76,16 +74,16 @@ void RegisterUser() {
         userFile << "Name: " << name << endl;
         userFile << "Password: " << password << endl;
         userFile.close();
-        cout << "\nUSER REGISTERED SUCCESSFULLY! DATA SAVED TO " << filename << endl;
+        cout << "\nUSER REGISTERED SUCCESSFULLY!\n";
     } else {
-        cout << "\nERROR: COULD NOT CREATE FILE FOR USER." << endl;
+        cout << "\nERROR: COULD NOT CREATE FILE FOR USER.\n";
     }
 }
 
 void LoginMenu() {
     string username, password, filename;
     int choice;
-    cout << "\n--- LOGIN ---" << endl;
+    cout << "\n--- LOGIN ---\n";
 
     cin.ignore();
     cout << "ENTER YOUR NAME: ";
@@ -105,11 +103,11 @@ void LoginMenu() {
         if (storedName == "Name: " + username && storedPassword == "Password: " + password) {
             cout << "\nLOGIN SUCCESSFUL! WELCOME, " << username << "!\n";
             do {
-                cout << "\nPRESS 1 : ADD EXPENSE" << endl;
-                cout << "PRESS 2 : VIEW EXPENSES" << endl;
-                cout << "PRESS 3 : DELETE EXPENSE" << endl;
-                cout << "PRESS 4 : TOTAL EXPENSES" << endl;
-                cout << "PRESS 5 : LOGOUT" << endl;
+                cout << "\nPRESS 1 : ADD EXPENSE\n";
+                cout << "PRESS 2 : VIEW EXPENSES\n";
+                cout << "PRESS 3 : DELETE EXPENSE\n";
+                cout << "PRESS 4 : TOTAL EXPENSES\n";
+                cout << "PRESS 5 : LOGOUT\n";
                 cout << "ENTER YOUR CHOICE: ";
 
                 while (!(cin >> choice) || choice < 1 || choice > 5) {
@@ -130,15 +128,15 @@ void LoginMenu() {
                         TotalExpenses(username);
                         break;
                     case 5:
-                        cout << "\nLOGGING OUT..." << endl;
+                        cout << "\nLOGGING OUT...\n";
                         return;
                 }
             } while (true);
         } else {
-            cout << "\nERROR: INVALID CREDENTIALS." << endl;
+            cout << "\nERROR: INVALID CREDENTIALS.\n";
         }
     } else {
-        cout << "\nERROR: USER DOES NOT EXIST. PLEASE REGISTER FIRST." << endl;
+        cout << "\nERROR: USER DOES NOT EXIST. PLEASE REGISTER FIRST.\n";
     }
 }
 
@@ -165,7 +163,7 @@ void AddExpense(const string& username) {
         outFile.close();
         cout << "\nEXPENSE ADDED SUCCESSFULLY!\n";
     } else {
-        cout << "\nERROR: COULD NOT SAVE EXPENSE." << endl;
+        cout << "\nERROR: COULD NOT SAVE EXPENSE.\n";
     }
 }
 
@@ -189,7 +187,8 @@ void ViewExpenses(const string& username) {
                 double amount = stod(line.substr(delimiterPos + 1));
                 hasExpenses = true;
 
-                cout << left << setw(30) << description << right << setw(10) << fixed << setprecision(2) << amount << endl;
+                cout << left << setw(30) << description 
+                     << right << setw(10) << fixed << setprecision(2) << amount << endl;
             }
         }
 
@@ -233,7 +232,6 @@ void DeleteExpense(const string& username) {
         inFile.close();
         tempFile.close();
 
-        // Replace the original file with the temp file
         remove(filename.c_str());
         rename("temp.txt", filename.c_str());
 
@@ -264,6 +262,7 @@ void TotalExpenses(const string& username) {
             }
         }
         inFile.close();
+
         cout << "TOTAL EXPENSES: PKR " << fixed << setprecision(2) << total << endl;
     } else {
         cout << "\nERROR: COULD NOT OPEN EXPENSES FILE.\n";
@@ -273,7 +272,7 @@ void TotalExpenses(const string& username) {
 void HandleInvalidInput(int maxChoice) {
     cin.clear();
     cin.ignore(numeric_limits<streamsize>::max(), '\n');
-    cout << "\nINVALID INPUT. PLEASE ENTER A CHOICE BETWEEN 1-" << maxChoice << "." << endl;
+    cout << "\nINVALID INPUT. PLEASE ENTER A CHOICE BETWEEN 1-" << maxChoice << ".\n";
 }
 
 int main() {
