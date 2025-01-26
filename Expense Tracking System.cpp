@@ -6,6 +6,8 @@
 
 using namespace std;
 
+enum Category { FOOD, TRANSPORT, UTILITIES, ENTERTAINMENT, OTHER };
+
 void StartingMenu();
 void RegisterUser();
 void LoginMenu();
@@ -14,6 +16,8 @@ void ViewExpenses(const string& username);
 void DeleteExpense(const string& username);
 void TotalExpenses(const string& username);
 void HandleInvalidInput(int maxChoice);
+Category GetCategory();
+string CategoryToString(Category cat);
 
 void StartingMenu() {
     int choice;
@@ -143,6 +147,7 @@ void LoginMenu() {
 void AddExpense(const string& username) {
     string description;
     double amount;
+    Category category;
     string filename = username + "_expenses.txt";
 
     cout << "\n--- ADD EXPENSE ---\n";
@@ -157,9 +162,11 @@ void AddExpense(const string& username) {
         cout << "ENTER AMOUNT: ";
     }
 
+    category = GetCategory();  // Get category from user input
+
     ofstream outFile(filename, ios::app);
     if (outFile.is_open()) {
-        outFile << description << ":" << amount << endl;
+        outFile << description << ":" << amount << ":" << CategoryToString(category) << endl;
         outFile.close();
         cout << "\nEXPENSE ADDED SUCCESSFULLY!\n";
     } else {
@@ -177,17 +184,21 @@ void ViewExpenses(const string& username) {
         string line;
         bool hasExpenses = false;
 
-        cout << left << setw(30) << "DESCRIPTION" << right << setw(10) << "AMOUNT (PKR)" << endl;
-        cout << string(40, '-') << endl;
+        cout << left << setw(30) << "DESCRIPTION" << setw(15) << "CATEGORY" << right << setw(10) << "AMOUNT (PKR)" << endl;
+        cout << string(55, '-') << endl;
 
         while (getline(inFile, line)) {
-            size_t delimiterPos = line.find(':');
-            if (delimiterPos != string::npos) {
-                string description = line.substr(0, delimiterPos);
-                double amount = stod(line.substr(delimiterPos + 1));
+            size_t delimiterPos1 = line.find(':');
+            size_t delimiterPos2 = line.find_last_of(':');
+            if (delimiterPos1 != string::npos && delimiterPos2 != string::npos) {
+                string description = line.substr(0, delimiterPos1);
+                double amount = stod(line.substr(delimiterPos1 + 1, delimiterPos2 - delimiterPos1 - 1));
+                string category = line.substr(delimiterPos2 + 1);
+
                 hasExpenses = true;
 
                 cout << left << setw(30) << description 
+                     << setw(15) << category 
                      << right << setw(10) << fixed << setprecision(2) << amount << endl;
             }
         }
@@ -266,6 +277,36 @@ void TotalExpenses(const string& username) {
         cout << "TOTAL EXPENSES: PKR " << fixed << setprecision(2) << total << endl;
     } else {
         cout << "\nERROR: COULD NOT OPEN EXPENSES FILE.\n";
+    }
+}
+
+Category GetCategory() {
+    int choice;
+    cout << "\nSELECT EXPENSE CATEGORY:\n";
+    cout << "1. FOOD\n";
+    cout << "2. TRANSPORT\n";
+    cout << "3. UTILITIES\n";
+    cout << "4. ENTERTAINMENT\n";
+    cout << "5. OTHER\n";
+    cout << "ENTER YOUR CHOICE: ";
+    cin >> choice;
+
+    switch(choice) {
+        case 1: return FOOD;
+        case 2: return TRANSPORT;
+        case 3: return UTILITIES;
+        case 4: return ENTERTAINMENT;
+        default: return OTHER;
+    }
+}
+
+string CategoryToString(Category cat) {
+    switch(cat) {
+        case FOOD: return "FOOD";
+        case TRANSPORT: return "TRANSPORT";
+        case UTILITIES: return "UTILITIES";
+        case ENTERTAINMENT: return "ENTERTAINMENT";
+        default: return "OTHER";
     }
 }
 
