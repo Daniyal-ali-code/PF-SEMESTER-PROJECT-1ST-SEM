@@ -3,6 +3,7 @@
 #include <string>
 #include <limits>    // For numeric_limits
 #include <iomanip>   // For formatting output
+#include <stdexcept> // For standard exceptions
 
 using namespace std;
 
@@ -66,21 +67,23 @@ void RegisterUser() {
 
     filename = name + ".txt";
 
-    ifstream checkFile(filename);
-    if (checkFile.is_open()) {
-        cout << "\nERROR: USER ALREADY EXISTS. PLEASE LOGIN OR USE A DIFFERENT NAME.\n";
-        checkFile.close();
-        return;
-    }
+    try {
+        ifstream checkFile(filename);
+        if (checkFile.is_open()) {
+            throw runtime_error("ERROR: USER ALREADY EXISTS. PLEASE LOGIN OR USE A DIFFERENT NAME.");
+        }
 
-    ofstream userFile(filename);
-    if (userFile.is_open()) {
+        ofstream userFile(filename);
+        if (!userFile.is_open()) {
+            throw runtime_error("ERROR: COULD NOT CREATE FILE FOR USER.");
+        }
+
         userFile << "Name: " << name << endl;
         userFile << "Password: " << password << endl;
         userFile.close();
         cout << "\nUSER REGISTERED SUCCESSFULLY!\n";
-    } else {
-        cout << "\nERROR: COULD NOT CREATE FILE FOR USER.\n";
+    } catch (const exception& e) {
+        cout << e.what() << endl;
     }
 }
 
@@ -152,35 +155,42 @@ void AddExpense(const string& username) {
 
     cout << "\n--- ADD EXPENSE ---\n";
 
-    cin.ignore();
-    cout << "ENTER EXPENSE DESCRIPTION: ";
-    getline(cin, description);
+    try {
+        cin.ignore();
+        cout << "ENTER EXPENSE DESCRIPTION: ";
+        getline(cin, description);
 
-    cout << "ENTER AMOUNT: ";
-    while (!(cin >> amount) || amount <= 0) {
-        HandleInvalidInput(1);
         cout << "ENTER AMOUNT: ";
-    }
+        if (!(cin >> amount) || amount <= 0) {
+            throw invalid_argument("Amount must be a positive number.");
+        }
 
-    category = GetCategory();  // Get category from user input
+        category = GetCategory();  // Get category from user input
 
-    ofstream outFile(filename, ios::app);
-    if (outFile.is_open()) {
+        ofstream outFile(filename, ios::app);
+        if (!outFile.is_open()) {
+            throw runtime_error("Could not open file for writing.");
+        }
+
         outFile << description << ":" << amount << ":" << CategoryToString(category) << endl;
         outFile.close();
         cout << "\nEXPENSE ADDED SUCCESSFULLY!\n";
-    } else {
-        cout << "\nERROR: COULD NOT SAVE EXPENSE.\n";
+    } catch (const exception& e) {
+        cout << "\nERROR: " << e.what() << endl;
     }
 }
 
 void ViewExpenses(const string& username) {
     string filename = username + "_expenses.txt";
-    ifstream inFile(filename);
+    ifstream inFile;
 
-    cout << "\n--- VIEW EXPENSES ---\n";
+    try {
+        inFile.open(filename);
+        if (!inFile.is_open()) {
+            throw runtime_error("Could not open expenses file.");
+        }
 
-    if (inFile.is_open()) {
+        cout << "\n--- VIEW EXPENSES ---\n";
         string line;
         bool hasExpenses = false;
 
@@ -208,8 +218,8 @@ void ViewExpenses(const string& username) {
         if (!hasExpenses) {
             cout << "\nNO EXPENSES FOUND FOR THIS USER.\n";
         }
-    } else {
-        cout << "\nERROR: COULD NOT OPEN EXPENSES FILE OR NO EXPENSES FOUND.\n";
+    } catch (const exception& e) {
+        cout << "\nERROR: " << e.what() << endl;
     }
 }
 
@@ -219,7 +229,11 @@ void DeleteExpense(const string& username) {
     ofstream tempFile("temp.txt");
 
     cout << "\n--- DELETE EXPENSE ---\n";
-    if (inFile.is_open() && tempFile.is_open()) {
+    try {
+        if (!inFile.is_open() || !tempFile.is_open()) {
+            throw runtime_error("Could not open expenses file.");
+        }
+
         string line;
         string descriptionToDelete;
         cout << "ENTER EXPENSE DESCRIPTION TO DELETE: ";
@@ -251,8 +265,8 @@ void DeleteExpense(const string& username) {
         } else {
             cout << "\nNO EXPENSE FOUND WITH DESCRIPTION: " << descriptionToDelete << endl;
         }
-    } else {
-        cout << "\nERROR: COULD NOT OPEN EXPENSES FILE.\n";
+    } catch (const exception& e) {
+        cout << "\nERROR: " << e.what() << endl;
     }
 }
 
@@ -263,7 +277,11 @@ void TotalExpenses(const string& username) {
 
     cout << "\n--- TOTAL EXPENSES ---\n";
 
-    if (inFile.is_open()) {
+    try {
+        if (!inFile.is_open()) {
+            throw runtime_error("Could not open expenses file.");
+        }
+
         string line;
         while (getline(inFile, line)) {
             size_t delimiterPos = line.find(':');
@@ -275,8 +293,8 @@ void TotalExpenses(const string& username) {
         inFile.close();
 
         cout << "TOTAL EXPENSES: PKR " << fixed << setprecision(2) << total << endl;
-    } else {
-        cout << "\nERROR: COULD NOT OPEN EXPENSES FILE.\n";
+    } catch (const exception& e) {
+        cout << "\nERROR: " << e.what() << endl;
     }
 }
 
